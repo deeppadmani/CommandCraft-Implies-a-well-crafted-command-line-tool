@@ -35,5 +35,6 @@ void execute_command(const vector<string>& args);
 bool execute_builtin(const vector<string>& args);
 void signal_handler(int signo);
 string expand_env_var(const string& arg);
+void refreshLine(int cursor_pos);
 
 #endif // MATICBASH_H

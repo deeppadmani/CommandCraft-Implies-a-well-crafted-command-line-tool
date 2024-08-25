@@ -94,7 +94,11 @@ string read_input()
                 cout.flush();
                 cout << "\b";
                 cout.flush();
-                for (int i = cursor_pos; i < input.size(); i++) cout << "\b";
+                for (int i = cursor_pos; i < input.size(); i++) 
+                {
+                    cout << "\b";
+                    cout.flush();
+                }
             }
         } 
         else if (ch == 27) 
@@ -111,11 +115,7 @@ string read_input()
                     if (history_index > 0) 
                     {
                         history_index--;
-                        for (int i = cursor_pos; i; i--)
-                        {
-                            cout << "\b \b";
-                            cout.flush();
-                        }
+                        refreshLine(cursor_pos);
                         input = get_history(history_index);
                         cursor_pos = input.length();
                         cout << "\r$ " << input;
@@ -127,11 +127,7 @@ string read_input()
                     if (history_index < history.size() - 1) 
                     {
                         history_index++;
-                        for (int i = cursor_pos; i; i--)
-                        {
-                            cout << "\b \b";
-                            cout.flush();
-                        }
+                        refreshLine(cursor_pos);
                         input = get_history(history_index);
                         cursor_pos = input.length();
                         cout << "\r$ " << input;
@@ -140,11 +136,7 @@ string read_input()
                     else 
                     {
                         history_index = history.size();
-                        for (int i = cursor_pos; i; i--)
-                        {
-                            cout << "\b \b";
-                            cout.flush();
-                        }
+                        refreshLine(cursor_pos);
                         input.clear();
                         cursor_pos = 0;
                         cout << "\r$ ";
@@ -361,4 +353,21 @@ string expand_env_var(const string& arg)
         }
     }
     return expanded_arg;
+}
+
+/**
+ * @brief Clears the characters from the current cursor position backward.
+ * 
+ * This function moves the cursor backward from the specified position, 
+ * erasing characters as it goes by printing backspace, space, and backspace.
+ * 
+ * @param cursor_pos The number of characters to erase from the current cursor position.
+ */
+void refreshLine(int cursor_pos) 
+{
+    for (int i = cursor_pos; i; i--)
+    {
+        cout << "\b \b";
+        cout.flush();
+    }
 }
