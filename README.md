@@ -13,12 +13,13 @@ This project is a custom shell implementation in C++. The shell provides basic c
 - **Arrow Key Navigation**: Navigate through the command line using left and right arrow keys.
 - **Backspace Support**: Delete characters from the command line using the backspace key.
 - **Signal Handling**: Handles signals like `SIGINT` (Ctrl+C) and `SIGTERM`.
+- **Persistent History**: Command history is stored in `.maticbash_history` file and persists between sessions.
 
 ## File Structure
 
 - **MaticMain.cpp**: Main entry point for the shell, handles input/output and calls other components.
 - **MaticBash.cpp**: Contains the core logic for command parsing, execution, and history management.
-  
+- **.maticbash_history**: Stores command history across sessions.
 ## Compilation
 
 The project uses a `Makefile` to manage the build process. The following are the key targets:
@@ -58,7 +59,16 @@ Once compiled, you can run the shell by executing the following command:
 ./Matic
 ```
 
-You will see a prompt (`$ `), where you can type commands just like in a regular shell. Use the arrow keys to navigate through the command history or move the cursor within the command line. Press Enter to execute the command.
+You'll see a prompt (`$ `) where you can enter commands. Use arrow keys to navigate through command history or move the cursor within the command line. Press Enter to execute a command.
+
+### History Feature
+
+The shell now includes a persistent history feature:
+
+- Command history is stored in a file named `.maticbash_history` in the user's home directory.
+- This allows the history to persist between sessions.
+- Users can access previous commands even after restarting the shell.
+- The up and down arrow keys can be used to navigate through the command history.
 
 ## Author
 
