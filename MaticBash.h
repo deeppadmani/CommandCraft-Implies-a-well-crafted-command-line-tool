@@ -133,12 +133,9 @@ class History
 	            string timestamp;
 	            string cmd;
                 ss >> cnum;
-                cout << cnum << endl;
                 ss.ignore(); // Ignore the space after cnum
                 getline(ss, timestamp, '\t');
-                cout << timestamp << endl;
                 getline(ss, cmd);
-                cout << cmd << endl;
 
                 history.emplace_back(HistoryNode(cnum, timestamp, cmd));
                 nextCommandNumber = max(nextCommandNumber, cnum + 1);
