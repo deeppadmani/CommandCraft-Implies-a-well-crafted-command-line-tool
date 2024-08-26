@@ -12,7 +12,7 @@
 #include "MaticBash.h"
 
 // Global history object
-vector<string> history;
+History commandHistory;
 int history_index = -1;
 
 /**
@@ -21,26 +21,15 @@ int history_index = -1;
  * @param command The command string to add to history.
  */
 void add_to_history(const string& command) {
-    if (history.size() < HISTORY_SIZE) {
-        history.push_back(command);
+    if (commandHistory.size() < HISTORY_SIZE) {
+        commandHistory.addCommand(command);
     } else {
-        history.erase(history.begin());
-        history.push_back(command);
+        commandHistory.eraseFirst();
+        commandHistory.addCommand(command);
     }
-    history_index = history.size(); // Reset history index after new command
+    history_index = commandHistory.size();
 }
 
-/**
- * @brief Retrieves the command in the history according to index.
- *
- * @return string The previous command, or an empty string if at the beginning.
- */
-string get_history(int index) {
-    if (index >= 0 && index < history.size()) {
-        return history[index];
-    }
-    return "";
-}
 
 /**
  * @brief Reads input from the user with advanced terminal handling.
@@ -116,7 +105,7 @@ string read_input()
                     {
                         history_index--;
                         refreshLine(cursor_pos);
-                        input = get_history(history_index);
+                        input = commandHistory.getCommand(history_index);
                         cursor_pos = input.length();
                         cout << "\r$ " << input;
                         cout.flush();
@@ -124,18 +113,18 @@ string read_input()
                 } 
                 else if (seq[1] == 'B') 
                 {   // Down arrow - next command
-                    if (history_index < history.size() - 1) 
+                    if (history_index < commandHistory.size() - 1) 
                     {
                         history_index++;
                         refreshLine(cursor_pos);
-                        input = get_history(history_index);
+                        input = commandHistory.getCommand(history_index);
                         cursor_pos = input.length();
                         cout << "\r$ " << input;
                         cout.flush();
                     } 
                     else 
                     {
-                        history_index = history.size();
+                        history_index = commandHistory.size();
                         refreshLine(cursor_pos);
                         input.clear();
                         cursor_pos = 0;
@@ -257,6 +246,12 @@ bool execute_builtin(const vector<string>& args) {
             }
         }
         return false;
+    } else if(args[0] == "history"){
+        if (args.size() == 1)
+        {
+            commandHistory.display();
+            return false;
+        }
     }
     return true;
 }
@@ -356,12 +351,10 @@ string expand_env_var(const string& arg)
 }
 
 /**
- * @brief Clears the characters from the current cursor position backward.
- * 
- * This function moves the cursor backward from the specified position, 
- * erasing characters as it goes by printing backspace, space, and backspace.
- * 
- * @param cursor_pos The number of characters to erase from the current cursor position.
+ * @brief Clears the current line by moving the cursor back and erasing characters.
+ *
+ *
+ * @param cursor_pos The number of characters to move back and erase.
  */
 void refreshLine(int cursor_pos) 
 {

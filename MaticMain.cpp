@@ -10,12 +10,18 @@
  */
 #include "MaticBash.h"
 
+// Global history object
+extern History commandHistory;
+extern int history_index;
+
 int main() 
 {
     // Set up signal handlers for SIGINT and SIGTERM
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGTSTP, signal_handler);
+    
+    history_index = commandHistory.size();
 
     while (true) 
     {
@@ -46,6 +52,7 @@ int main()
 
         // Check for exit command
         if (args[0] == "exit") {
+            commandHistory.saveHistory();
             exit(0);
         }
 
