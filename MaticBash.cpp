@@ -90,7 +90,7 @@ string read_input()
                 }
             }
         } 
-        else if (ch == 27) 
+        else if (ch == 27)  //ESC before Arrow key 
         {   // Arrow keys
             char seq[2];
             if (read(STDIN_FILENO, &seq[0], 1) != 1 || read(STDIN_FILENO, &seq[1], 1) != 1) {
@@ -213,6 +213,12 @@ vector<string> parse_input(const string& input) {
                 current_arg.clear();
             }
         } else {
+            if(quote_char)
+            {
+                cout << "Error: Unclosed quote detected." << endl;
+                args.clear();
+                return args;
+            }
             current_arg += c;
         }
     }
